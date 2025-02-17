@@ -45,6 +45,7 @@ class Undetected():
                                 options=self.options)
         self.wait = lambda time_w, criteria: WebDriverWait(self.driver, time_w).until(
             EC.presence_of_element_located(criteria))
+        print('return driver')
 
     def __del__(self):
         self.close_driver()
