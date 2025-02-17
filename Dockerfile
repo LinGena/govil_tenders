@@ -21,9 +21,14 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_123.0.6312.122-1_amd64.deb -O google-chrome-stable.deb \
-    && dpkg -i google-chrome-stable.deb || apt-get install -fy \
-    && rm google-chrome-stable.deb
+RUN wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable=133.0.5735.90-1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Проверяем, что Chrome 133 установлен
+RUN which google-chrome && google-chrome --version
 
 ENV DISPLAY=:0
 
