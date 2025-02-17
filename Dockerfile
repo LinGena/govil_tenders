@@ -1,5 +1,4 @@
 FROM python:3.11.9-slim
-
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update && \
@@ -9,17 +8,10 @@ RUN apt-get update && \
 RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_123.0.6312.122-1_amd64.deb -O google-chrome-stable.deb \
     && dpkg -i google-chrome-stable.deb || apt-get install -fy \
     && rm google-chrome-stable.deb
-
-# Проверяем, что Chrome 133 установлен
 RUN which google-chrome && google-chrome --version
-
 ENV DISPLAY=:0
-
 WORKDIR /app
-
 COPY . .
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
 CMD ["Xvfb", ":0", "-screen", "0", "1280x1024x16"]
