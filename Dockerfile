@@ -21,9 +21,6 @@ RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable
     && dpkg -i google-chrome-stable.deb || apt-get install -fy \
     && rm google-chrome-stable.deb
 
-# Проверяем, что Chrome 133 установлен
-RUN which google-chrome && google-chrome --version
-
 ENV DISPLAY=:0
 
 WORKDIR /app
