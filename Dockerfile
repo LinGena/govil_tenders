@@ -38,4 +38,4 @@ COPY . .
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["bash", "-c", "Xvfb :0 -screen 0 1280x1024x16 & python main.py"]
+CMD ["Xvfb", ":0", "-screen", "0", "1280x1024x16"]
