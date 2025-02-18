@@ -15,7 +15,7 @@ def main():
   
 if __name__ == "__main__":
     main()
-    schedule.every(2).hour.do(main)
+    schedule.every(5).hours.do(main)
     while True:
         schedule.run_pending()
 
