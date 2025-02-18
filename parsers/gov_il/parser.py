@@ -14,23 +14,15 @@ class ParseGovIl(Undetected):
         self.db_client = PostgreSQLTable('tamrur_govil')
         self.skip_pages = 0
 
-    def run(self, count_try = 0):
-        if count_try == 0:
-            self.start_parse = time.time()
-            print(f'Start parser at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.start_parse))}')
-        if count_try > 2:
-            return None
+    def run(self) -> bool:
         try:
             self._parse()
+            return True
         except Exception as ex:
             self.logger.error(ex)
-            return self.run(count_try+1)
         finally:
             self.close_driver()
-        end_parse = time.time()
-        duration = end_parse - self.start_parse
-        print(f'Finish parser at {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(end_parse))}')
-        print(f'Total execution time: {duration:.2f} seconds')
+        return False
 
     def get_url(self) -> str:
         url = self.domain + '/he/collectors/policies?Type=30280ed5-306f-4f0b-a11d-cacf05d36648'
