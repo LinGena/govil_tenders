@@ -72,6 +72,7 @@ class ParseGovIl(Undetected):
                 page_data['committees'] = self.get_span_value(list_item, "metaData_2_0")
                 page_data['publication_date'] = self.convert_to_datetime(self.get_span_value(list_item, "publishDate_0"))
                 self.db_client.insert_row(page_data)
+                self.logger.info('New entry added')
                 self.parse_next_page = True
             except Exception as e:
                 print(e)
