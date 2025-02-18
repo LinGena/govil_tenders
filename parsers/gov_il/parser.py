@@ -14,11 +14,14 @@ class ParseGovIl(Undetected):
         self.db_client = PostgreSQLTable('tamrur_govil')
         self.skip_pages = 0
 
-    def run(self):
+    def run(self, count_try = 0):
+        if count_try > 2:
+            return None
         try:
             self._parse()
         except Exception as ex:
             self.logger.error(ex)
+            return self.run(count_try+1)
         finally:
             self.close_driver()
 

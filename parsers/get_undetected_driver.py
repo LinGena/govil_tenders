@@ -2,12 +2,15 @@ import os
 import uuid
 import time
 import shutil
+import random
 from pyvirtualdisplay import Display
 import undetected_chromedriver as uc
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from utils.logger import Logger
+from proxies.proxy_manager import get_proxies
+from proxies.proxy_ext import load_proxy
 
 
 class Undetected():
@@ -29,17 +32,28 @@ class Undetected():
         self.options.add_argument('--start-maximized')
         self.options.add_argument('--disable-infobars')
         self.options.add_argument('--disable-gpu')
-        self.options.add_argument('--disable-extensions')
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
         self.options.add_argument('--ignore-certificate-errors')
         self.options.add_argument('--ignore-ssl-errors')
         self.options.add_argument('--allow-insecure-localhost')
-
-    def get_driver(self):
+        extensions = []
+        proxy = self.get_proxy()
         self.folder_temp = os.path.join(os.getcwd(), f"chrome_temp/temp_{uuid.uuid4().hex}")
         os.makedirs(self.folder_temp, exist_ok=True)
         time.sleep(1)
+        proxy_extension_path = f'{self.folder_temp}/proxy_ext'
+        load_proxy(proxy, proxy_extension_path)
+        extensions.append(proxy_extension_path)
+        self.options.add_argument(f"--load-extension={','.join(extensions)}")
+
+    def get_proxy(self) -> dict:
+        proxies_list = get_proxies()
+        random.shuffle(proxies_list)
+        proxy = proxies_list[0]
+        return proxy
+
+    def get_driver(self):
         self.driver = uc.Chrome(version_main=int(os.getenv('CHROME_VERSION')),
                                 user_data_dir=self.folder_temp,
                                 options=self.options)
